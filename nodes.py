@@ -374,9 +374,31 @@ class ControlNetWrapper:
         # In low_vram mode, keep control_context on CPU until needed
         if low_vram and control_context is not None:
             self.control_context = control_context.cpu()
-        
+
         class HooksContainer:
-            hooks = []
+            def __init__(self):
+                self.hooks = []
+
+            def clone(self):
+                new_container = HooksContainer()
+                new_container.hooks = self.hooks.copy()
+                return new_container
+
+            def clone_and_combine(self, other):
+                new_container = self.clone()
+                if hasattr(other, 'hooks') and other.hooks is not None:
+                    new_container.hooks.extend(other.hooks)
+                return new_container
+
+            # --- Extra safety methods mimicking ComfyUI's native HookGroup ---
+            def contains(self, hook):
+                return hook in self.hooks
+
+            def is_subset_of(self, other):
+                if not hasattr(other, 'hooks'):
+                    return False
+                return all(h in other.hooks for h in self.hooks)
+
         self.extra_hooks = HooksContainer()
         
     def pre_run(self, model, percent_to_timestep_function):
