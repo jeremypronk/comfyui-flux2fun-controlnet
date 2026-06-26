@@ -72,6 +72,7 @@ def patched_forward_orig(
         y: Tensor,
         guidance: Tensor = None,
         control=None,
+        timestep_zero_index=None,  # see: https://github.com/bryanmcguire/comfyui-flux2fun-controlnet/pull/6/changes
         transformer_options={},
         attn_mask: Tensor = None,
         **kwargs
