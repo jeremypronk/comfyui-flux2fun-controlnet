@@ -370,6 +370,7 @@ class ControlNetWrapper:
         self.ctrl_w = ctrl_w
         self.low_vram = low_vram
         self.previous_controlnet = None
+        self.multigpu_clones = {}  # see: https://github.com/bryanmcguire/comfyui-flux2fun-controlnet/issues/14
         
         # In low_vram mode, keep control_context on CPU until needed
         if low_vram and control_context is not None:
